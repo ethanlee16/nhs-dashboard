@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "concurrently -k \"nodemon ./bin/www\" \"npm run watch\"",
+    "start": "node ./bin/www",
+    "dev": "concurrently -k \"nodemon ./bin/www\" \"npm run watch\"",
     "watch": "watchify client/App.js -o public/bundle.js -t [ babelify --presets [ es2015 stage-0 react ] ]",
     "cron": "node bin/cron",
     "postinstall": "browserify client/App.js -o public/bundle.js -t [ babelify --presets [ es2015 stage-0 react ] ]"
