@@ -90,7 +90,7 @@ function decodeEmail(encoded) {
 }
 
 function validEmail(email) {
-  return email.match(/\S+@\S+\.\S+/) && email.includes('@smhsstudents.org');
+  return email.match(/\S+\.\S+.@smhsstudents\.org)/);
 }
 
 function sendCode(phone, code, cb) {
