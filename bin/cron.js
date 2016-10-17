@@ -18,8 +18,7 @@ var users = db.ref('users');
 var info = db.ref('info');
 var client = new twilio.RestClient(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
-request(`https://login.microsoftonline.com
-  /common/oauth2/v2.0/token`, {
+request(`https://login.microsoftonline.com/common/oauth2/v2.0/token`, {
   method: 'POST',
   form: {
     'grant_type': 'refresh_token',
