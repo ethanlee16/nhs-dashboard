@@ -21,7 +21,7 @@ class LoginForm extends React.Component {
   
   login(e) {
     e.preventDefault();
-    if (!this.state.email.toLowerCase().match(/\S+\.\S+.@smhsstudents\.org)/) {
+    if (!this.state.email.toLowerCase().match(/\S+\.\S+.@smhsstudents\.org/)) {
       return this.props.err('Invalid email provided. Use your school email!');
     }
     fetch('/api/users/login', {
