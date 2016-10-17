@@ -5,7 +5,7 @@ var request = require('request-promise');
 
 if (process.env.NODE_ENV !== 'development') {
   var fs = require('fs');
-  fs.writeFileSync('private.json', process.env.FIREBASE);
+  fs.writeFileSync(path.join(__dirname, '../private.json'), process.env.FIREBASE);
 }
 
 firebase.initializeApp({
