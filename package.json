@@ -6,6 +6,9 @@
     "cron": "node bin/cron",
     "postinstall": "browserify client/App.js -o public/bundle.js -t [ babelify --presets [ es2015 stage-0 react ] ]"
   },
+  "engines": {
+    "node": ">=6.3.0"
+  },
   "dependencies": {
     "babel-eslint": "^6.1.0",
     "babel-preset-es2015": "^6.9.0",
