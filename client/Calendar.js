@@ -79,7 +79,7 @@ class Calendar extends React.Component {
 
     selectDay(date, event, view) {
       if (!(date.day() >= 2 && date.day() <= 4)
-        && nondates.indexOf(date.format()) === -1) return;
+        || nondates.indexOf(date.format()) !== -1) return;
       let booking = this.props.db.ref('bookings/' + date.format());
       booking.once('value').then(snapshot => {
         // Continue immediately if empty date
