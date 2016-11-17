@@ -13,11 +13,13 @@ firebase.initializeApp({
 
 let db = firebase.database();
 let users = db.ref('users');
+let dates = db.ref('bookings');
 let outlook = db.ref('info/outlook');
 let client = new twilio.RestClient(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
 api.use((req, res, next) => {
   // TODO: decode JWT to find user instead 
+  console.log(req.body)
   if (!req.body.email || !validEmail(req.body.email)) {
     return next(new Error("Invalid email provided."))
   }
@@ -25,10 +27,10 @@ api.use((req, res, next) => {
   .split('.').map(w => w[0].toUpperCase() + w.substring(1)).join(' ');
 
   req.body.encodedEmail = encodeEmail(req.body.email);
-  users.child(req.body.encodedEmail).once('value', snapshot => {
+  users.child(req.body.encodedEmail).once('value').then(snapshot => {
     req.user = snapshot.val();
     next();
-  });
+  }).catch(err => next(err));
 });
 
 api.post('/login', (req, res, next) => {
@@ -78,30 +80,40 @@ api.post('/verify', (req, res, next) => {
 });
 
 api.post('/schedule', (req, res, next) => {
+  // return setTimeout(function() {
+  //   dates.child(req.body.date).transaction(bookings => {
+  //     for (var tutor in bookings) {
+  //       if (bookings[tutor] === req.body.email) {
+  //         bookings[tutor] += ";xxx";
+  //       }
+  //     }
+  //     return bookings;
+  //   }).then(() => res.json({}));
+  // }, 3000);
   outlook.child('accessToken').once('value').then(token => {
     return request('https://outlook.office.com/api/v2.0/me/events', {
       method: 'POST',
       body: {
-        'Subject': 'NHS Tutoring',
+        'Subject': req.body.name + ' - NHS Tutoring',
         'Body': {
           'ContentType': 'HTML',
           'Content': 'You have successfully scheduled your NHS tutoring session.'
         },
         'Start': {
-          'DateTime': req.body.start,
+          'DateTime': req.body.date + "T14:10:00",
           'TimeZone': 'Pacific Standard Time'
         },
         'End': {
-          'DateTime': req.body.end,
+          'DateTime': req.body.date + "T15:00:00",
           'TimeZone': 'Pacific Standard Time'
         },
-        'Attendees': [{
-          'EmailAddress': {
-            'Address': req.body.email,
-            'Name': req.body.name
-          },
-          'Type': 'Required'
-        }]
+        // 'Attendees': [{
+        //   'EmailAddress': {
+        //     'Address': req.body.email,
+        //     'Name': req.body.name
+        //   },
+        //   'Type': 'Required'
+        // }]
       },
       headers: {
         'Authorization': 'Bearer ' + token.val(),
@@ -110,8 +122,18 @@ api.post('/schedule', (req, res, next) => {
       json: true
     });
   }).then(response => {
-    res.json(response);
-  }).catch(err => next(err));
+    console.log(response);
+    return dates.child(req.body.date).transaction(bookings => {
+      for (var tutor in bookings) {
+        if (bookings[tutor] === req.body.email) {
+          bookings[tutor] += ";" + response.Id;
+        }
+      }
+      return bookings;
+    })
+  })
+  .then(() => res.json({ success: true }))
+  .catch(err => next(err));
 });
 
 function encodeEmail(email) {

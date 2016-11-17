@@ -21,14 +21,13 @@ class LoginForm extends React.Component {
   
   login(e) {
     e.preventDefault();
+    let email = this.state.email.trim().toLowerCase();
     if (!this.state.email.toLowerCase().match(/\S+\.\S+.@smhsstudents\.org/)) {
       return this.props.err('Invalid email provided. Use your school email!');
     }
     fetch('/api/users/login', {
       method: 'POST',
-      body: JSON.stringify({
-        email: this.state.email
-      }),
+      body: JSON.stringify({ email }),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -37,7 +36,7 @@ class LoginForm extends React.Component {
     .then(response => {
       if (response.success) {
         this.props.success(response.registered);
-        localStorage.email = this.state.email;
+        localStorage.email = email;
       } else {
         this.props.err(response.message);
       }
