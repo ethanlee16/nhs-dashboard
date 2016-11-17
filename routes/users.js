@@ -107,13 +107,13 @@ api.post('/schedule', (req, res, next) => {
           'DateTime': req.body.date + "T15:00:00",
           'TimeZone': 'Pacific Standard Time'
         },
-        // 'Attendees': [{
-        //   'EmailAddress': {
-        //     'Address': req.body.email,
-        //     'Name': req.body.name
-        //   },
-        //   'Type': 'Required'
-        // }]
+        'Attendees': [{
+          'EmailAddress': {
+            'Address': req.body.email,
+            'Name': req.body.name
+          },
+          'Type': 'Required'
+        }]
       },
       headers: {
         'Authorization': 'Bearer ' + token.val(),
