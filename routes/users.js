@@ -95,6 +95,7 @@ api.post('/schedule', (req, res, next) => {
       method: 'POST',
       body: {
         'Subject': req.body.name + ' - NHS Tutoring',
+        'IsReminderOn': false,
         'Body': {
           'ContentType': 'HTML',
           'Content': 'You have successfully scheduled your NHS tutoring session.'
