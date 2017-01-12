@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import { Router, Route, Link, hashHistory } from 'react-router';
+import Promise from 'promise-polyfill';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>  
+      <div>
         <h1>NHS Tutoring Dashboard</h1>
         {this.props.children}
       </div>
@@ -46,4 +47,8 @@ const Routes = React.createClass({
   }
 });
 
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 ReactDOM.render(<Routes />, document.getElementById('root'));
+
