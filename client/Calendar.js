@@ -29,7 +29,6 @@ class Calendar extends React.Component {
         weekends: false,
         dayClick: this.selectDay,
         dayRender: (date, cell) => {
-          console.log(date);
           var day = date.day();
           var month = $('#calendar').fullCalendar('getDate').month();
           if (((day >= 2 && day <= 4) 
