@@ -25,6 +25,7 @@
     "lodash": "^4.15.0",
     "morgan": "~1.6.1",
     "phone": "^1.0.8",
+    "promise-polyfill": "^6.0.2",
     "react": "^15.2.1",
     "react-bootstrap": "^0.30.3",
     "react-dom": "^15.2.1",
