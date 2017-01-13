@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { Router, withRouter } from 'react-router';
 import LoginForm from './LoginForm';
 import VerifyForm from './VerifyForm';
 import RegisterForm from './RegisterForm';
@@ -15,26 +15,26 @@ class Login extends React.Component {
     this.message = ::this.message;
 
     this.state = {
-      loggingIn: true
+      loggingIn: true,
     };
   }
 
   message(text) {
     this.setState({
-      message: text
+      message: text,
     });
   }
 
   error(message) {
     this.setState({
-      error: message
+      error: message,
     });
   }
 
-  registerSuccess(){
+  registerSuccess() {
     this.setState({
       error: '',
-      registered: true
+      registered: true,
     });
   }
 
@@ -42,7 +42,7 @@ class Login extends React.Component {
     this.setState({
       error: '',
       loggingIn: false,
-      registered: toVerify
+      registered: toVerify,
     });
   }
 
@@ -51,24 +51,30 @@ class Login extends React.Component {
   }
 
   render() {
-    var utils = {
+    const utils = {
       err: this.error,
-      message: this.message
-    }
+      message: this.message,
+    };
+
+    const innerForm = this.state.registered ?
+      <VerifyForm success={this.dashboardRedirect} {...utils} /> :
+      <RegisterForm success={this.registerSuccess} {...utils} />;
+
     return (
       <div className="form-control">
         <p>{this.state.message}</p>
         <p>{this.state.error}</p>
         {
-          this.state.loggingIn ? 
-          <LoginForm success={this.loginSuccess} {...utils} /> :
-            this.state.registered ? 
-              <VerifyForm success={this.dashboardRedirect} {...utils} /> :
-              <RegisterForm success={this.registerSuccess} {...utils} />
+          this.state.loggingIn ?
+            <LoginForm success={this.loginSuccess} {...utils} /> : innerForm
         }
       </div>
     );
   }
+}
+
+Login.propTypes = {
+  router: React.PropTypes.instanceOf(Router).isRequired,
 };
 
 export default withRouter(Login);

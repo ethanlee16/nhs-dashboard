@@ -12,54 +12,62 @@ class VerifyForm extends React.Component {
     this.props.message(`Enter the six-digit
       code we texted to the number we have for you.`);
   }
-  
+
   inputChange(e) {
     this.setState({
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   }
-  
+
   verify(e) {
     e.preventDefault();
     if (!localStorage.email) {
       return this.props.err(`There was an application error. 
-        Please try logging in again.`)
+        Please try logging in again.`);
     }
-    fetch('/api/users/verify', {
+    return fetch('/api/users/verify', {
       method: 'POST',
       body: JSON.stringify({
         code: this.state.code,
-        email: localStorage.email
+        email: localStorage.email,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     .then(response => response.json())
-    .then(response => {
+    .then((response) => {
       if (response.success) {
         localStorage.fbToken = response.token;
         this.props.success();
       } else {
         this.props.err(response.message);
       }
-    })
+    });
   }
 
   render() {
     return (
-    <form onSubmit={this.verify}>
-      <input
-        type="text" 
-        id="code"
-        onChange={this.inputChange}
-        className="form-control" />
-      <input
-        type="submit"
-        className="btn btn-primary" />
-    </form>
+      <form onSubmit={this.verify}>
+        <input
+          type="text"
+          id="code"
+          onChange={this.inputChange}
+          className="form-control"
+        />
+        <input
+          type="submit"
+          className="btn btn-primary"
+        />
+      </form>
     );
   }
 }
+
+VerifyForm.propTypes = {
+  message: React.PropTypes.func.isRequired,
+  success: React.PropTypes.func.isRequired,
+  err: React.PropTypes.func.isRequired,
+};
 
 export default VerifyForm;

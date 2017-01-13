@@ -12,53 +12,61 @@ class RegisterForm extends React.Component {
     this.props.message(`Please enter your phone number.
       It will be used for NHS communications only.`);
   }
-  
+
   inputChange(e) {
     this.setState({
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   }
-  
+
   register(e) {
     e.preventDefault();
     if (!localStorage.email) {
       return this.props.err(`There was an application error. 
-        Please try logging in again.`)
+        Please try logging in again.`);
     }
-    fetch('/api/users/register', {
+    return fetch('/api/users/register', {
       method: 'POST',
       body: JSON.stringify({
         phone: this.state.phone,
-        email: localStorage.email
+        email: localStorage.email,
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     .then(response => response.json())
-    .then(response => {
+    .then((response) => {
       if (response.success) {
         this.props.success();
       } else {
         this.props.err(response.message);
       }
-    })
+    });
   }
 
   render() {
     return (
-    <form onSubmit={this.register}>
-      <input
-        type="text" 
-        id="phone"
-        onChange={this.inputChange}
-        className="form-control" />
-      <input
-        type="submit"
-        className="btn btn-primary" />
-    </form>
+      <form onSubmit={this.register}>
+        <input
+          type="text"
+          id="phone"
+          onChange={this.inputChange}
+          className="form-control"
+        />
+        <input
+          type="submit"
+          className="btn btn-primary"
+        />
+      </form>
     );
   }
 }
+
+RegisterForm.propTypes = {
+  message: React.PropTypes.func.isRequired,
+  success: React.PropTypes.func.isRequired,
+  err: React.PropTypes.func.isRequired,
+};
 
 export default RegisterForm;

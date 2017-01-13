@@ -1,12 +1,13 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var app = express();
-var IS_DEV = app.get('env') === 'development';
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+
+const app = express();
+const IS_DEV = app.get('env') === 'development';
 
 if (!IS_DEV) {
-  var fs = require('fs');
   fs.writeFileSync('private.json', process.env.FIREBASE);
 }
 
@@ -15,19 +16,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/api/users', require('./routes/users'))
+app.use('/api/users', require('./routes/users'));
 
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: IS_DEV ? err : {}
+    error: IS_DEV ? err : {},
   });
 });
 

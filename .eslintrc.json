@@ -8,7 +8,7 @@
     "node": true
   },
   "parser": "babel-eslint",
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "airbnb"],
   "rules": {
     "no-console": 0,
     "quotes": 0,
@@ -19,7 +19,14 @@
     "no-native-reassign": 2,
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2
+    "react/react-in-jsx-scope": 2,
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore"
+    }]
   },
   "plugins": [
     "react"
