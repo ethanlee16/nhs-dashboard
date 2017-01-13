@@ -6,7 +6,9 @@ cache:
     - node_modules
 deploy:
   provider: heroku
-  app: nhsdashboard
+  app:
+    master: nhsdashboard-staging
+    production: nhsdashboard
   api_key:
     secure: RJbqi6AF/ZiwmvGJUjhj/mgmTU5seU2GUdiwRoSXb8zsnok4y0xpEMYqVPgZ60bsj9VcqNe3SNW9ilq+ZA/RLkzjaY/kakO5iSckAp7rbsaZ9t8UFpwsQMSROmmIZcsFUQzT6qSQgcCT6CXUDZbTtXZtizGbK/Zf+7sfQStcYxF1I2t3YQj94spqMLpsr8JwmLRLQShmOYLvPo7HK1OR9OvI3T7sHQ9zAayJAkFn98kvGmnMWwQAuJFuSS8czZOoz90hSdlYCi7jFN/XABhD4OkvQN6EbD5Tj2jyL0c6lTcpszquQcY8n647UmTW8yCHRm+Hrzge6uRYZRG28hXhEsDr3tl4HnXLPu610RcuE9SP0dfgy1Em9UedV/q95O6ZSYRbQT9tIItxclkLJwwS/90EaO9ZsELYFl452B0B2e+uZ+lholtAKW3yM9TwPNNeD1/+V/NVKp8zKdC/0zHf3h2Zdl5g7g/hlHvIIjWtmFpDgfExJE3afSXcemlDbgff2aZDROesko3SNZEfH+9oOjgD6djLPsprUATDE8fAnbCImtLJspSOtg3wpBh2vsluNphEHb1GUh0pLrnJ0yfPr3dHCk+1/V1fZFIycjSUS9thZARSs+VIywlYe0+Ed1qHGdJVN6WR5KvmwC2iFF/wSuIg9/UDNPBXo2ZdL1i0XFI=
 script:
