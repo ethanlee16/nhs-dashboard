@@ -1,17 +1,38 @@
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route, Link, hashHistory } from 'react-router';
 import Promise from 'promise-polyfill';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Dashboard from './Dashboard';
 import Login from './Login';
 
-const App = props =>
-  (
-    <div>
-      <h1>NHS Tutoring Dashboard</h1>
-      {props.children}
-    </div>
+injectTapEventPlugin();
+
+const App = (props) => {
+  const button = localStorage.fbToken ?
+    (<Link to="/login">
+      <FlatButton
+        label="Logout"
+        onTouchTap={() => localStorage.clear()}
+        style={{ color: 'white' }}
+      />
+    </Link>) : null;
+
+  return (
+    <MuiThemeProvider>
+      <div>
+        <AppBar
+          title={<span>NHS Dashboard</span>}
+          iconElementRight={button}
+        />
+        {props.children}
+      </div>
+    </MuiThemeProvider>
   );
+};
 
 App.propTypes = {
   children: React.PropTypes.element.isRequired,

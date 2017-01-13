@@ -1,7 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
 import 'whatwg-fetch';
-import { Modal, Col, Button, Alert } from 'react-bootstrap';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import { Col } from 'react-bootstrap';
 
 const nondates = ['2016-10-19', '2016-11-22', '2016-11-23', '2016-11-24', '2016-12-13', '2016-12-14', '2016-12-15', '2016-12-20', '2016-12-21', '2016-12-22', '2016-12-27', '2016-12-28', '2016-12-29', '2017-01-03', '2017-02-01', '2017-04-18', '2017-04-19', '2017-04-20'];
 const $ = require('jquery');
@@ -171,42 +173,45 @@ class Calendar extends React.Component {
     }
     if (this.state.error) {
       errorMessage = (
-        <Alert bsStyle="danger">
+        <div bsStyle="danger">
           <strong>Uh-oh! </strong>{this.state.error}
-        </Alert>
+        </div>
       );
     }
+
+    const actions = [
+      <FlatButton
+        onTouchTap={this.close}
+        disabled={this.state.saving}
+      >
+        Cancel
+      </FlatButton>,
+      <FlatButton
+        primary
+        onTouchTap={this.save}
+        disabled={this.state.saving}
+      >
+        {this.state.saving ? "Confirming..." : "Confirm"}
+      </FlatButton>,
+    ];
+
     return (
       <Col md={8}>
         { errorMessage }
         <div id="calendar" style={{ textTransform: 'capitalize' }} />
-        <Modal show={this.state.selecting} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>{date}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>You are now confirming your NHS tutoring session
-             for <b>{date}</b>, from 2:05-3:00 PM.</p>
-            <p>Would you like to save this date?&nbsp;
-              <b>Make sure you are available before confirming!</b>
-            </p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              onClick={this.close}
-              disabled={this.state.saving}
-            >
-              Cancel
-            </Button>
-            <Button
-              bsStyle="primary"
-              onClick={this.save}
-              disabled={this.state.saving}
-            >
-              {this.state.saving ? "Confirming..." : "Confirm"}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <Dialog
+          open={this.state.selecting}
+          onRequestClose={this.close}
+          modal
+          title={date}
+          actions={actions}
+        >
+          <p>You are now confirming your NHS tutoring session
+           for <b>{date}</b>, from 2:05-3:00 PM.</p>
+          <p>Would you like to save this date?&nbsp;
+            <b>Make sure you are available before confirming!</b>
+          </p>
+        </Dialog>
       </Col>
     );
   }

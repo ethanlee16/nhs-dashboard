@@ -1,33 +1,38 @@
 import React from 'react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.login = ::this.login;
+    this.action = ::this.action;
     this.inputChange = ::this.inputChange;
-  }
-
-  componentDidMount() {
-    this.props.message(`Please sign in with 
-      your school email (@smhsstudents.org).`);
   }
 
   inputChange(e) {
     this.setState({
-      [e.target.id]: e.target.value,
+      input: e.target.value,
     });
   }
 
-  login(e) {
+  action(e) {
     e.preventDefault();
-    const email = this.state.email.trim().toLowerCase();
-    if (!this.state.email.toLowerCase().match(/\S+\.\S+.@smhsstudents\.org/)) {
-      return this.props.err('Invalid email provided. Use your school email!');
+    const input = this.state.input.trim().toLowerCase();
+    if (!this.props.validator(input)) {
+      return this.setState({
+        error: this.props.error,
+      });
     }
-    return fetch('/api/users/login', {
+
+    const body = { [this.props.input]: input };
+    if (this.props.requiresEmail) {
+      body.email = localStorage.email;
+    }
+
+    return fetch(`/api/users/${this.props.type}`, {
       method: 'POST',
-      body: JSON.stringify({ email }),
+      body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,26 +40,34 @@ class LoginForm extends React.Component {
     .then(response => response.json())
     .then((response) => {
       if (response.success) {
-        this.props.success(response.registered);
-        localStorage.email = email;
+        this.setState({
+          input: '',
+          error: '',
+        });
+        this.props.success(response, input);
       } else {
-        this.props.err(response.message);
+        this.setState({
+          error: response.message,
+        });
       }
     });
   }
 
   render() {
     return (
-      <form onSubmit={this.login}>
-        <input
-          type="text"
-          id="email"
+      <form onSubmit={this.action}>
+        <TextField
           onChange={this.inputChange}
-          className="form-control"
+          value={this.state.input}
+          floatingLabelText={this.props.fields[0]}
+          hintText={this.props.fields[1]}
+          errorText={this.state.error}
         />
-        <input
+        <br />
+        <RaisedButton
+          label={this.props.type}
           type="submit"
-          className="btn btn-primary"
+          primary
         />
       </form>
     );
@@ -62,9 +75,17 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  message: React.PropTypes.func.isRequired,
   success: React.PropTypes.func.isRequired,
-  err: React.PropTypes.func.isRequired,
+  type: React.PropTypes.string.isRequired,
+  input: React.PropTypes.string.isRequired,
+  fields: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  validator: React.PropTypes.func.isRequired,
+  error: React.PropTypes.string.isRequired,
+  requiresEmail: React.PropTypes.bool,
+};
+
+LoginForm.defaultProps = {
+  requiresEmail: false,
 };
 
 export default LoginForm;
