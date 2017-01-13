@@ -32,7 +32,7 @@ request(`https://login.microsoftonline.com/common/oauth2/v2.0/token`, {
 }).then(response =>
   info.child('outlook').set({
     accessToken: response.access_token,
-  }),
+  })
 ).then((snapshot) => {
   process.exit(0);
 }).catch((err) => {
