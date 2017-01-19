@@ -92,8 +92,8 @@ class Calendar extends React.Component {
       if (tutors.indexOf(localStorage.email) !== -1) {
         throw new Error("Already scheduled tutoring for this date.");
       }
-      if (tutors.length >= 2) {
-        throw new Error('Two tutors have already reserved this date. '
+      if (tutors.length >= 3) {
+        throw new Error('Three tutors have already reserved this date. '
           + 'If the appointment is green, it has been confirmed; otherwise, '
           + 'it might open up!');
       }
